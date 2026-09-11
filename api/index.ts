@@ -6,6 +6,7 @@ import type { INestApplication } from '@nestjs/common';
 let appPromise: Promise<INestApplication> | undefined;
 
 async function getCurrencies(request: Request, response: Response) {
+  setCorsHeaders(response);
   const apiKey = process.env.API_KEY;
   if (!apiKey) {
     return response.status(503).json({ message: 'API_KEY is not configured' });
@@ -22,6 +23,12 @@ async function getCurrencies(request: Request, response: Response) {
     console.error('Failed to fetch currencies', error);
     return response.status(502).json({ message: 'Currency API is unavailable' });
   }
+}
+
+function setCorsHeaders(response: Response) {
+  response.setHeader('Access-Control-Allow-Origin', '*');
+  response.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 }
 
 function getRequestPath(request: Request) {
@@ -51,6 +58,12 @@ async function createNestApp() {
 }
 
 export default async function handler(request: Request, response: Response) {
+  setCorsHeaders(response);
+
+  if (request.method === 'OPTIONS') {
+    return response.status(204).end();
+  }
+
   const requestPath = getRequestPath(request);
 
   if (requestPath === '/') {

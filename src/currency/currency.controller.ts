@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ConvertCurrencyDto } from './dto/convert-currency.dto.js';
 import { CurrencyService } from './currency.service.js';
+import { HistoricalRatesDto } from './dto/historical-rates.dto.js';
 
 @Controller('currency')
 export class CurrencyController {
@@ -9,6 +10,11 @@ export class CurrencyController {
   @Get('currencies')
   getCurrencies() {
     return this.currencyService.getCurrencies();
+  }
+
+  @Get('historical')
+  getHistorical(@Query() query: HistoricalRatesDto) {
+    return this.currencyService.getHistorical(query);
   }
 
   @Post('convert')

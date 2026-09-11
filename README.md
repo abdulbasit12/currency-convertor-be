@@ -48,6 +48,16 @@ Returns the application welcome message.
 
 Returns all currencies supported by FreeCurrencyAPI. No parameters are required.
 
+### `GET /currency/historical`
+
+Returns exchange rates for a historical date. Supported query parameters are `date` (`YYYY-MM-DD`), `currencies` (for example `EUR,GBP`), and optional `base_currency`.
+
+Example:
+
+```text
+GET /currency/historical?date=2022-01-01&currencies=EUR,GBP
+```
+
 ### `POST /currency/convert`
 
 Converts an amount and stores the conversion in MongoDB.

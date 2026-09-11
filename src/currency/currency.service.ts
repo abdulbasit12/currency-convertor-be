@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ConvertCurrencyDto } from './dto/convert-currency.dto.js';
+import { HistoricalRatesDto } from './dto/historical-rates.dto.js';
 import { Conversion, ConversionDocument } from './schemas/conversion.schema.js';
 
 interface RatesResponse {
@@ -27,6 +28,22 @@ export class CurrencyService {
     async getCurrencies() {
         const response = await this.request('/currencies');
         return response.data ?? {};
+    }
+
+    getHistorical(query: HistoricalRatesDto) {
+        const params = new URLSearchParams();
+
+        if (query.date) {
+            params.set('date', query.date);
+        }
+        if (query.base_currency) {
+            params.set('base_currency', query.base_currency.toUpperCase());
+        }
+        if (query.currencies) {
+            params.set('currencies', query.currencies.toUpperCase());
+        }
+
+        return this.request(`/historical?${params.toString()}`);
     }
 
     async convert(dto: ConvertCurrencyDto) {
