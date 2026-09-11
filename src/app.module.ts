@@ -13,6 +13,8 @@ import { CurrencyModule } from './currency/currency.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         uri: configService.getOrThrow<string>('MONGODB_URI'),
+        lazyConnection: true,
+        serverSelectionTimeoutMS: 5000,
       }),
     }),
     CurrencyModule,
