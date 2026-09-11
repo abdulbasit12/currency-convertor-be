@@ -32,6 +32,10 @@ function getRequestPath(request: Request) {
   return pathname.replace(/^\/api(?=\/|$)/, '') || '/';
 }
 
+function removeApiPrefix(request: Request) {
+  request.url = request.url.replace(/^\/api(?=\/|$)/, '') || '/';
+}
+
 async function createNestApp() {
   const { ValidationPipe } = require('@nestjs/common') as typeof import('@nestjs/common');
   const { NestFactory } = require('@nestjs/core') as typeof import('@nestjs/core');
@@ -55,6 +59,7 @@ export default async function handler(request: Request, response: Response) {
   }
 
   try {
+    removeApiPrefix(request);
     appPromise ??= createNestApp();
     const app = await appPromise;
     return app.getHttpAdapter().getInstance()(request, response);
