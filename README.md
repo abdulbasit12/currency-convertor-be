@@ -69,11 +69,12 @@ Request body:
   "from": "USD",
   "to": "EUR",
   "amount": 100,
-  "userId": "user-123"
+  "userId": "user-123",
+  "date": "2022-01-01"
 }
 ```
 
-Returns the exchange rate, converted amount, and conversion timestamp.
+The optional `date` uses the historical exchange rate for that date. If omitted, the latest rate is used. The response includes the rate date, converted amount, and conversion timestamp.
 
 ### `GET /currency/history?userId=user-123`
 

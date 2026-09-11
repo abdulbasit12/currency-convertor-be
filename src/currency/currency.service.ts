@@ -15,6 +15,10 @@ interface RatesResponse {
     data?: Record<string, number>;
 }
 
+interface HistoricalRatesResponse {
+    data?: Record<string, Record<string, number>>;
+}
+
 @Injectable()
 export class CurrencyService {
     private readonly apiUrl = 'https://api.freecurrencyapi.com/v1';
@@ -55,8 +59,18 @@ export class CurrencyService {
             throw new BadRequestException('userId is required');
         }
 
-        const rates = await this.request(`/latest?base_currency=${encodeURIComponent(from)}&currencies=${encodeURIComponent(to)}`) as RatesResponse;
-        const rate = rates.data?.[to];
+        let rate: number | undefined;
+        if (dto.date) {
+            const rates = await this.request(
+                `/historical?date=${encodeURIComponent(dto.date)}&base_currency=${encodeURIComponent(from)}&currencies=${encodeURIComponent(to)}`,
+            ) as HistoricalRatesResponse;
+            rate = rates.data?.[dto.date]?.[to];
+        } else {
+            const rates = await this.request(
+                `/latest?base_currency=${encodeURIComponent(from)}&currencies=${encodeURIComponent(to)}`,
+            ) as RatesResponse;
+            rate = rates.data?.[to];
+        }
 
         if (typeof rate !== 'number') {
             throw new BadGatewayException('The currency API did not return a conversion rate');
@@ -70,6 +84,7 @@ export class CurrencyService {
             amount: dto.amount,
             rate,
             result,
+            rateDate: dto.date,
         });
 
         return {
@@ -80,6 +95,7 @@ export class CurrencyService {
             amount: dto.amount,
             rate,
             result,
+            rateDate: dto.date,
             convertedAt: conversion.createdAt,
         };
     }

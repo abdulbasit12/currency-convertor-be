@@ -1,4 +1,4 @@
-import { IsNumber, IsString, Matches, Min } from 'class-validator';
+import { IsDateString, IsNumber, IsOptional, IsString, Matches, Min } from 'class-validator';
 
 export class ConvertCurrencyDto {
   @IsString()
@@ -16,4 +16,8 @@ export class ConvertCurrencyDto {
   @IsString()
   @Matches(/^\S+$/)
   userId!: string;
+
+  @IsOptional()
+  @IsDateString({ strict: true })
+  date?: string;
 }

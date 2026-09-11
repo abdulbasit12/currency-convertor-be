@@ -26,6 +26,9 @@ export class Conversion {
 
   @Prop({ required: true, min: 0 })
   result!: number;
+
+  @Prop()
+  rateDate?: string;
 }
 
 export const ConversionSchema = SchemaFactory.createForClass(Conversion);
