@@ -36,6 +36,8 @@ API_KEY=your_api_key
 MONGODB_URI=mongodb://127.0.0.1:27017/currency-converter
 ```
 
+For Vercel, add `API_KEY` and `MONGODB_URI` under Project Settings > Environment Variables. The local `.env` file is ignored by git and is not deployed.
+
 ## Endpoints
 
 ### `GET /`
