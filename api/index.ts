@@ -1,14 +1,12 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { Request, Response } from 'express';
-import { AppModule, ObserveInstrument } from '../src/app.module';
+import { AppModule } from '../src/app.module';
 
 let appPromise: ReturnType<typeof createNestApp> | undefined;
 
 async function createNestApp() {
-  const app = await NestFactory.create(AppModule, {
-    instrument: ObserveInstrument,
-  });
+  const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   await app.init();
@@ -16,8 +14,13 @@ async function createNestApp() {
 }
 
 export default async function handler(request: Request, response: Response) {
-  appPromise ??= createNestApp();
-
-  const app = await appPromise;
-  return app.getHttpAdapter().getInstance()(request, response);
+  try {
+    appPromise ??= createNestApp();
+    const app = await appPromise;
+    return app.getHttpAdapter().getInstance()(request, response);
+  } catch (error) {
+    appPromise = undefined;
+    console.error('Failed to initialize NestJS serverless application', error);
+    return response.status(500).json({ message: 'Internal server error' });
+  }
 }
