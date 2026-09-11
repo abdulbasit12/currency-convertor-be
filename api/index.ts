@@ -26,6 +26,12 @@ async function getCurrencies(request: Request, response: Response) {
   }
 }
 
+function getRequestPath(request: Request) {
+  const rawPath = request.originalUrl ?? request.url ?? request.path;
+  const pathname = new URL(rawPath, 'http://localhost').pathname;
+  return pathname.replace(/^\/api(?=\/|$)/, '') || '/';
+}
+
 async function createNestApp() {
   const { ValidationPipe } = require('@nestjs/common') as typeof import('@nestjs/common');
   const { NestFactory } = require('@nestjs/core') as typeof import('@nestjs/core');
@@ -38,11 +44,13 @@ async function createNestApp() {
 }
 
 export default async function handler(request: Request, response: Response) {
-  if (request.path === '/' || request.url === '/') {
+  const requestPath = getRequestPath(request);
+
+  if (requestPath === '/') {
     return response.status(200).json({ status: 'ok' });
   }
 
-  if (request.path === '/currency/currencies') {
+  if (requestPath === '/currency/currencies') {
     return getCurrencies(request, response);
   }
 
