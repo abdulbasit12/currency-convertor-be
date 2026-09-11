@@ -32,6 +32,13 @@ function getRequestPath(request: Request) {
   return pathname.replace(/^\/api(?=\/|$)/, '') || '/';
 }
 
+function removeApiPrefix(request: Request) {
+  const normalizedUrl = request.url.replace(/^\/api(?=\/|$)/, '') || '/';
+  request.url = normalizedUrl;
+  request.originalUrl = normalizedUrl;
+  request.baseUrl = '';
+}
+
 async function createNestApp() {
   const { ValidationPipe } = require('@nestjs/common') as typeof import('@nestjs/common');
   const { NestFactory } = require('@nestjs/core') as typeof import('@nestjs/core');
@@ -55,12 +62,14 @@ export default async function handler(request: Request, response: Response) {
   }
 
   try {
+    removeApiPrefix(request);
     appPromise ??= createNestApp();
     const app = await appPromise;
     return app.getHttpAdapter().getInstance()(request, response);
   } catch (error) {
     appPromise = undefined;
     console.error('Failed to initialize NestJS serverless application', error);
-    return response.status(500).json({ message: 'Internal server error' });
+    const message = error instanceof Error ? error.message : 'Unknown initialization error';
+    return response.status(503).json({ message: 'Application initialization failed', error: message });
   }
 }
