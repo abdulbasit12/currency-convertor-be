@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { ConvertCurrencyDto } from './dto/convert-currency.dto';
-import { CurrencyService } from './currency.service';
+import { ConvertCurrencyDto } from './dto/convert-currency.dto.js';
+import { CurrencyService } from './currency.service.js';
 
 @Controller('currency')
 export class CurrencyController {

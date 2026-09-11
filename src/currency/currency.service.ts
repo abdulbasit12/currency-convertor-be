@@ -7,8 +7,8 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ConvertCurrencyDto } from './dto/convert-currency.dto';
-import { Conversion, ConversionDocument } from './schemas/conversion.schema';
+import { ConvertCurrencyDto } from './dto/convert-currency.dto.js';
+import { Conversion, ConversionDocument } from './schemas/conversion.schema.js';
 
 interface RatesResponse {
     data?: Record<string, number>;

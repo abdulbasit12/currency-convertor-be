@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { CurrencyController } from './currency.controller';
-import { CurrencyService } from './currency.service';
-import { Conversion, ConversionSchema } from './schemas/conversion.schema';
+import { CurrencyController } from './currency.controller.js';
+import { CurrencyService } from './currency.service.js';
+import { Conversion, ConversionSchema } from './schemas/conversion.schema.js';
 
 @Module({
   imports: [

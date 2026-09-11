@@ -3,6 +3,7 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "resolvePackageJsonExports": true,
+    "rootDir": ".",
     "esModuleInterop": true,
     "isolatedModules": true,
     "declaration": true,
